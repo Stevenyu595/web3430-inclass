@@ -26,3 +26,4 @@ npm run deploy
 ```
 
 This command will compile your application into the `dist` folder. It's the contents of this folder that you upload to the weber server for final deployment.
+# WEB3430_in_class
