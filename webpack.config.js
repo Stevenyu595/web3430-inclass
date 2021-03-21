@@ -5,6 +5,7 @@ module.exports = {
   entry: {
     main: "./src/javascripts/main.js",
   },
+  watch: true,
   mode: "development",
   devtool: "inline-source-map",
   devServer: {

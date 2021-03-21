@@ -11,20 +11,22 @@ export default function MovieList() {
   const history = useHistory();
 
   useEffect(() => {
-    fetch("/api/movies")
-      .then((response) => response.text())
-      .then((data) => {
-        setMovies(
-          JSON.parse(data, (key, value) => {
-            const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:.*Z$/;
-            if (typeof value === "string" && dateFormat.test(value)) {
-              return new Date(value);
-            }
-            return value;
-          })
-        );
-      })
-      .catch(console.error);
+    if (!movies) {
+      fetch("/api/movies")
+        .then((response) => response.text())
+        .then((data) => {
+          setMovies(
+            JSON.parse(data, (key, value) => {
+              const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:.*Z$/;
+              if (typeof value === "string" && dateFormat.test(value)) {
+                return new Date(value);
+              }
+              return value;
+            })
+          );
+        })
+        .catch(console.error);
+    }
   });
 
   if (!movies) {
