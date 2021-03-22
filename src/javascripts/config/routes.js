@@ -6,6 +6,7 @@ let router = express.Router();
 
 export function configureRoutes(app) {
   router.get("/", indexPage);
+  router.get("/about", indexPage);
   router.get("/movies*", indexPage);
   router.get("/api/movies", allMoviesAPI);
 
