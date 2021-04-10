@@ -8,7 +8,6 @@ let reviewSchema = new Schema({
 });
 
 let movieSchema = new Schema({
-  id: Number,
   title: String,
   plot: String,
   poster: String,
@@ -20,7 +19,20 @@ let movieSchema = new Schema({
   imbdID: String,
   added_at: Date,
   updated_at: Date,
+  releaseDate: Date,
   reviews: [reviewSchema],
+});
+
+movieSchema.virtual("id").get(function () {
+  return this._id.toHexString();
+});
+
+movieSchema.set("toJSON", {
+  virtuals: true,
+  transform: (doc, ret, options) => {
+    delete ret.__v;
+    delete ret._id;
+  },
 });
 
 export let Movie = mongoose.model("Movie", movieSchema);

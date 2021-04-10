@@ -9,5 +9,25 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import App from "./components/App";
+import ContactForm from "./components/ContactForm";
+import SignInForm from "./components/SignInForm";
+import SignUpForm from "./components/SignUpForm";
+import SignOut from "./components/SignOut";
 
-ReactDOM.render(<App />, document.getElementById("main"));
+if (document.getElementById("main")) {
+  ReactDOM.render(<App />, document.getElementById("main"));
+} else if (document.getElementById("contact")) {
+  ReactDOM.render(<ContactForm />, document.getElementById("contact"));
+} else if (document.getElementById("signup")) {
+  ReactDOM.render(<SignUpForm />, document.getElementById("signup"));
+} else if (document.getElementById("signin")) {
+  ReactDOM.render(<SignInForm />, document.getElementById("signin"));
+}
+
+if (document.querySelector("#_sign_user_out")) {
+  document.querySelector("#_sign_user_out").onclick = (e) => {
+    let el = document.createElement("div");
+    document.body.appendChild(el);
+    ReactDOM.render(<SignOut />, el);
+  };
+}

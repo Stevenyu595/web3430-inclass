@@ -20,18 +20,28 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+//Authentication
+import passport from "passport";
+import { strategy } from "./src/javascripts/config/passport";
+passport.use(strategy);
+app.use(passport.initialize());
+
 //Routing
 import { configureRoutes } from "./src/javascripts/config/routes";
 configureRoutes(app);
 
 //Handling errors
 app.use(function (req, res, next) {
-  next(createError(404));
+  res.render({
+    content: "error",
+    err: createError(404),
+    title: "Top 10 Movies",
+  });
 });
 
 app.use(function (err, req, res, next) {
   res.status(err.status || 500);
-  res.render(err);
+  res.render("layout", { content: "error", title: "Top 10 Movies", err: err });
 });
 
 //Create the web server

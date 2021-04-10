@@ -4,17 +4,23 @@ import { Switch, Route, Link, Redirect, useHistory } from "react-router-dom";
 import { About, ErrorNotFound } from "./Pages";
 import MovieForm from "./MovieForm";
 import { useEffect } from "react";
+import { useCookies } from "react-cookie";
 
 export const MovieContext = createContext();
 export default function MovieList() {
   const [movies, setMovies] = useState();
+  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  let [authenticated, setAuthenticated] = useState(cookies.token !== undefined);
   const history = useHistory();
 
   useEffect(() => {
     if (!movies) {
-      fetch("/api/movies")
+      fetch("/api/movies", {
+        credentials: "same-origin",
+      })
         .then((response) => response.text())
         .then((data) => {
+          console.log(data);
           setMovies(
             JSON.parse(data, (key, value) => {
               const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:.*Z$/;
@@ -33,19 +39,8 @@ export default function MovieList() {
     return <p>Loading...</p>;
   }
   return (
-    <MovieContext.Provider value={{ movies, setMovies }}>
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/movies">List</Link>
-          </li>
-          <li>
-            <Link to="/about">About</Link>
-          </li>
-        </ul>
+    <MovieContext.Provider value={{ movies, setMovies, setAuthenticated }}>
+      <div className="pull-content-right">
         <Route path="/movies">
           <button
             className="primary"
@@ -63,7 +58,7 @@ export default function MovieList() {
             Add a new movie
           </button>
         </Route>
-      </nav>
+      </div>
       <main>
         <Switch>
           <Route exact path="/movies">
@@ -86,9 +81,6 @@ export default function MovieList() {
           </Route>
           <Route path="/movies/:mid/edit">
             <MovieForm />
-          </Route>
-          <Route path="/about">
-            <About></About>
           </Route>
           <Redirect from="" to="/movies" />
           <Route path="*">
